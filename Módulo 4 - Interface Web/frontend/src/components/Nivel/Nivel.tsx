@@ -4,6 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 import PageHeader from '../Layout/PageHeader';
+import Icon from '../Layout/Icon';
 
 const DNA_DARK = '#054664';
 const DNA_TEAL = '#18B8D0';
@@ -44,7 +45,7 @@ const Badge: React.FC<{ label: string; ok?: boolean }> = ({ label, ok = true }) 
 );
 
 const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: string; color?: string }> = ({
-  label, value, sub, icon = '🛢️', color = DNA_DARK,
+  label, value, sub, icon = 'local_gas_station', color = DNA_DARK,
 }) => (
   <div style={{
     background: '#fff', borderRadius: 10, padding: '18px 20px',
@@ -52,7 +53,7 @@ const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: str
   }}>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: .4, fontWeight: 500 }}>{label}</div>
-      <span style={{ fontSize: 20 }}>{icon}</span>
+      <Icon name={icon} size={22} color={color} />
     </div>
     <div style={{ fontSize: 26, fontWeight: 700, color, marginTop: 8 }}>{value}</div>
     {sub && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{sub}</div>}
@@ -87,10 +88,10 @@ const Nivel: React.FC = () => {
 
         {/* KPIs */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-          <KpiCard label="Maior Nível" value="98,05%" sub="Nivel combustivel Gerador" icon="🔝" color={DNA_DARK} />
-          <KpiCard label="Menor Nível" value="50,00%" sub="Nivel combustivel Gerador · 16/05/2026" icon="🔽" color="#f59e0b" />
-          <KpiCard label="Volume Atual" value="294,15 l" sub="Nivel combustivel Gerador" icon="🛢️" color={DNA_TEAL} />
-          <KpiCard label="Capacidade Máxima" value="300 l" sub="Nivel combustivel Gerador" icon="📦" color="#6b7280" />
+          <KpiCard label="Maior Nível" value="98,05%" sub="Nivel combustivel Gerador" icon="vertical_align_top" color={DNA_DARK} />
+          <KpiCard label="Menor Nível" value="50,00%" sub="Nivel combustivel Gerador · 16/05/2026" icon="vertical_align_bottom" color="#f59e0b" />
+          <KpiCard label="Volume Atual" value="294,15 l" sub="Nivel combustivel Gerador" icon="local_gas_station" color={DNA_TEAL} />
+          <KpiCard label="Capacidade Máxima" value="300 l" sub="Nivel combustivel Gerador" icon="inventory_2" color="#6b7280" />
         </div>
 
         {/* Gauge visual */}
@@ -112,8 +113,8 @@ const Nivel: React.FC = () => {
               {[
                 { l: 'Capacidade', v: '300 l' },
                 { l: 'Volume Atual', v: '294,15 l' },
-                { l: 'Status', v: '🟢 Online' },
-                { l: 'Situação', v: '✅ Regular' },
+                { l: 'Status', v: 'Online' },
+                { l: 'Situação', v: 'Regular' },
               ].map(({ l, v }) => (
                 <div key={l}>
                   <div style={{ fontSize: 11, color: '#6b7280' }}>{l}</div>
@@ -127,7 +128,7 @@ const Nivel: React.FC = () => {
         {/* Tabela Capacidade */}
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', overflow: 'hidden' }}>
           <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}>🛢️ Capacidade por Reservatório</h3>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="local_gas_station" size={20} color={DNA_TEAL} /> Capacidade por Reservatório</span></h3>
             <input placeholder="Pesquisar Medidores" style={{ padding: '6px 12px', borderRadius: 20, border: '1px solid #d1d5db', fontSize: 12, outline: 'none' }} />
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -163,7 +164,7 @@ const Nivel: React.FC = () => {
         {/* Histórico */}
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', padding: '20px 24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}>📈 Histórico de Nível</h3>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="show_chart" size={20} color={DNA_TEAL} /> Histórico de Nível</span></h3>
             <div style={{ display: 'flex', gap: 6 }}>
               {['hora', 'dia', 'mês'].map(p => (
                 <button key={p} onClick={() => setPeriodo(p)} style={{

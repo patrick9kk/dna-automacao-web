@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PageHeader from '../Layout/PageHeader';
+import Icon from '../Layout/Icon';
 
 const DNA_DARK = '#054664';
 const DNA_TEAL = '#18B8D0';
@@ -88,7 +89,7 @@ const StatusMedidores: React.FC = () => {
     <div style={{ background: '#f3f4f6', minHeight: '100vh' }}>
       <PageHeader title="Status de Medidores">
         <span style={{ fontSize: 12, color: '#6b7280' }}>
-          🕒 Última atualização: <strong>{lastUpdate}</strong>
+          <Icon name="schedule" size={14} color="#6b7280" style={{ marginRight: 4 }} /> Última atualização: <strong>{lastUpdate}</strong>
         </span>
       </PageHeader>
 
@@ -139,7 +140,7 @@ const StatusMedidores: React.FC = () => {
             display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center',
           }}>
             <input
-              placeholder="🔍 Pesquisar medidor..."
+              placeholder="Pesquisar medidor..."
               value={search}
               onChange={e => setSearch(e.target.value)}
               style={{ padding: '7px 14px', borderRadius: 20, border: '1px solid #d1d5db', fontSize: 13, outline: 'none', minWidth: 220 }}

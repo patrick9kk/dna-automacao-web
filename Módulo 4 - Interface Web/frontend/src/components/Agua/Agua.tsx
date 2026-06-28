@@ -4,6 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 import PageHeader from '../Layout/PageHeader';
+import Icon from '../Layout/Icon';
 
 const DNA_DARK = '#054664';
 const DNA_TEAL = '#18B8D0';
@@ -38,7 +39,7 @@ const Badge: React.FC<{ label: string; ok?: boolean }> = ({ label, ok = true }) 
 );
 
 const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: string; color?: string }> = ({
-  label, value, sub, icon = '💧', color = DNA_DARK,
+  label, value, sub, icon = 'water_drop', color = DNA_DARK,
 }) => (
   <div style={{
     background: '#fff', borderRadius: 10, padding: '18px 20px',
@@ -46,7 +47,7 @@ const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: str
   }}>
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <div style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: .4, fontWeight: 500 }}>{label}</div>
-      <span style={{ fontSize: 20 }}>{icon}</span>
+      <Icon name={icon} size={22} color={color} />
     </div>
     <div style={{ fontSize: 26, fontWeight: 700, color, marginTop: 8 }}>{value}</div>
     {sub && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{sub}</div>}
@@ -64,16 +65,16 @@ const Agua: React.FC = () => {
 
         {/* KPIs */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-          <KpiCard label="Consumo Total" value="587,380 m³" icon="💧" color={DNA_DARK} />
-          <KpiCard label="Maior Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="📈" color="#3b82f6" />
-          <KpiCard label="Menor Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="📉" color={DNA_TEAL} />
-          <KpiCard label="Pico de Consumo" value="14,601 m³" sub="13/05/2026 · 09:57:05" icon="🔺" color="#ef4444" />
+          <KpiCard label="Consumo Total" value="587,380 m³" icon="water_drop" color={DNA_DARK} />
+          <KpiCard label="Maior Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="trending_up" color="#3b82f6" />
+          <KpiCard label="Menor Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="trending_down" color={DNA_TEAL} />
+          <KpiCard label="Pico de Consumo" value="14,601 m³" sub="13/05/2026 · 09:57:05" icon="arrow_upward" color="#ef4444" />
         </div>
 
         {/* Consumo por local */}
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', overflow: 'hidden' }}>
           <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}>💧 Consumo por Local</h3>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="water_drop" size={20} color={DNA_TEAL} /> Consumo por Local</span></h3>
             <input placeholder="Pesquisar Medidores" style={{ padding: '6px 12px', borderRadius: 20, border: '1px solid #d1d5db', fontSize: 12, outline: 'none' }} />
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -108,7 +109,7 @@ const Agua: React.FC = () => {
         {/* Histórico */}
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', padding: '20px 24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}>📊 Histórico de Água</h3>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="bar_chart" size={20} color={DNA_TEAL} /> Histórico de Água</span></h3>
             <div style={{ display: 'flex', gap: 6 }}>
               {['hora', 'dia', 'mês'].map(p => (
                 <button key={p} onClick={() => setPeriodo(p)} style={{

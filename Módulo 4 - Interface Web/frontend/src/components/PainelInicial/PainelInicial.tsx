@@ -4,6 +4,7 @@ import {
   Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 import PageHeader from '../Layout/PageHeader';
+import Icon from '../Layout/Icon';
 
 const DNA_DARK = '#054664';
 const DNA_TEAL = '#18B8D0';
@@ -33,7 +34,7 @@ const PARAMETROS = [
 
 // ── Sub-components ───────────────────────────────────────────────────────────
 const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: string; color?: string }> = ({
-  label, value, sub, icon = '⚡', color = DNA_DARK,
+  label, value, sub, icon = 'bolt', color = DNA_DARK,
 }) => (
   <div style={{
     background: '#fff', borderRadius: 10, padding: '18px 20px',
@@ -42,7 +43,7 @@ const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: str
   }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
       <div style={{ fontSize: 12, color: '#6b7280', fontWeight: 500, textTransform: 'uppercase', letterSpacing: .4 }}>{label}</div>
-      <span style={{ fontSize: 20 }}>{icon}</span>
+      <Icon name={icon} size={22} color={color} />
     </div>
     <div style={{ fontSize: 26, fontWeight: 700, color, marginTop: 8, lineHeight: 1.1 }}>{value}</div>
     {sub && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{sub}</div>}
@@ -69,10 +70,10 @@ const PainelInicial: React.FC = () => {
 
         {/* ── KPI row ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-          <KpiCard label="Consumo Total" value="85.010 MWh" icon="⚡" color={DNA_DARK} />
-          <KpiCard label="Maior Consumo" value="85.010 MWh" sub="Medidor Energia Geral" icon="📈" color="#f59e0b" />
-          <KpiCard label="Menor Consumo" value="85.010 MWh" sub="Medidor Energia Geral" icon="📉" color={DNA_TEAL} />
-          <KpiCard label="Pico de Consumo" value="124.322 MWh" sub="14/05/2026 · 09:52:41" icon="🔺" color="#ef4444" />
+          <KpiCard label="Consumo Total" value="85.010 MWh" icon="bolt" color={DNA_DARK} />
+          <KpiCard label="Maior Consumo" value="85.010 MWh" sub="Medidor Energia Geral" icon="trending_up" color="#f59e0b" />
+          <KpiCard label="Menor Consumo" value="85.010 MWh" sub="Medidor Energia Geral" icon="trending_down" color={DNA_TEAL} />
+          <KpiCard label="Pico de Consumo" value="124.322 MWh" sub="14/05/2026 · 09:52:41" icon="arrow_upward" color="#ef4444" />
         </div>
 
         {/* ── Medidor status card ── */}
@@ -98,8 +99,8 @@ const PainelInicial: React.FC = () => {
         {/* ── Parâmetros de Energia ── */}
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', overflow: 'hidden' }}>
           <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6' }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}>
-              ⚡ Parâmetros de Energia — Corrente
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon name="electrical_services" size={20} color={DNA_TEAL} /> Parâmetros de Energia — Corrente
             </h3>
             <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>Tensão · Potência ativa · Potência reativa · Fator de potência · Frequência</div>
           </div>
@@ -130,7 +131,7 @@ const PainelInicial: React.FC = () => {
         {/* ── Histórico de Energia ── */}
         <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', padding: '20px 24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}>📈 Histórico de Energia</h3>
+            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="show_chart" size={20} color={DNA_TEAL} /> Histórico de Energia</span></h3>
             <div style={{ display: 'flex', gap: 6 }}>
               {['hora', 'dia', 'mês'].map(p => (
                 <button key={p} onClick={() => setPeriodo(p)} style={{

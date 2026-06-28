@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import Icon from './Icon';
 
 const DNA_DARK = '#054664';
 const DNA_TEAL = '#18B8D0';
@@ -13,25 +14,25 @@ interface MenuItem {
 }
 
 const MENU: MenuItem[] = [
-  { label: 'Painel Inicial', path: '/dashboard', icon: '🏠' },
-  { label: 'Status de Medidores', path: '/status-medidores', icon: '📊' },
+  { label: 'Painel Inicial',      path: '/dashboard',        icon: 'home' },
+  { label: 'Status de Medidores', path: '/status-medidores', icon: 'sensors' },
   {
-    label: 'Infra Predial', icon: '🏗️',
+    label: 'Infra Predial', icon: 'apartment',
     children: [
       { label: 'Energia', path: '/energia' },
-      { label: 'Água',   path: '/agua'   },
-      { label: 'Nível',  path: '/nivel'  },
+      { label: 'Água',    path: '/agua'    },
+      { label: 'Nível',   path: '/nivel'   },
     ],
   },
   {
-    label: 'Manutenção', icon: '🔧',
+    label: 'Manutenção', icon: 'build',
     children: [
       { label: 'Chamados',    path: '/manutencao/chamados'    },
       { label: 'Preventivas', path: '/manutencao/preventivas' },
       { label: 'SLA',         path: '/manutencao/sla'         },
     ],
   },
-  { label: 'Alarmes', path: '/alarmes', icon: '🔔' },
+  { label: 'Alarmes', path: '/alarmes', icon: 'notifications' },
 ];
 
 interface Props { collapsed: boolean; onToggle: () => void }
@@ -58,7 +59,7 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
       width: collapsed ? 60 : 220, minHeight: '100vh',
       background: '#061f30', display: 'flex', flexDirection: 'column',
       transition: 'width .25s', flexShrink: 0,
-      borderRight: `1px solid rgba(255,255,255,.07)`,
+      borderRight: '1px solid rgba(255,255,255,.07)',
     }}>
       {/* Logo + toggle */}
       <div style={{
@@ -73,10 +74,9 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
         )}
         <button onClick={onToggle} style={{
           background: 'none', border: 'none', cursor: 'pointer',
-          color: 'rgba(255,255,255,.5)', fontSize: 18, padding: 4,
-          lineHeight: 1,
+          color: 'rgba(255,255,255,.5)', padding: 4, display: 'flex', alignItems: 'center',
         }}>
-          {collapsed ? '▶' : '◀'}
+          <Icon name={collapsed ? 'chevron_right' : 'chevron_left'} size={22} color="rgba(255,255,255,.5)" />
         </button>
       </div>
 
@@ -98,7 +98,7 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
                   borderLeft: isActive ? `3px solid ${DNA_TEAL}` : '3px solid transparent',
                 })}
               >
-                <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                <Icon name={item.icon} size={20} style={{ flexShrink: 0 }} />
                 {!collapsed && <span>{item.label}</span>}
               </NavLink>
             );
@@ -108,18 +108,19 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
             <div key={item.label}>
               <div
                 onClick={() => setOpenGroup(isOpen ? null : item.label)}
-                style={{
-                  ...linkBase,
-                  justifyContent: collapsed ? 'center' : 'space-between',
-                  userSelect: 'none',
-                }}
+                style={{ ...linkBase, justifyContent: collapsed ? 'center' : 'space-between', userSelect: 'none' }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 16, flexShrink: 0 }}>{item.icon}</span>
+                  <Icon name={item.icon} size={20} style={{ flexShrink: 0 }} />
                   {!collapsed && <span>{item.label}</span>}
                 </div>
                 {!collapsed && (
-                  <span style={{ fontSize: 10, opacity: .5, transition: 'transform .2s', transform: isOpen ? 'rotate(90deg)' : 'none' }}>▶</span>
+                  <Icon
+                    name="chevron_right"
+                    size={16}
+                    color="rgba(255,255,255,.4)"
+                    style={{ transition: 'transform .2s', transform: isOpen ? 'rotate(90deg)' : 'none' }}
+                  />
                 )}
               </div>
 
@@ -139,7 +140,7 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
                         fontSize: 13,
                       })}
                     >
-                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', flexShrink: 0 }} />
+                      <Icon name="fiber_manual_record" size={8} style={{ flexShrink: 0 }} />
                       {child.label}
                     </NavLink>
                   ))}
@@ -151,17 +152,13 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
       </nav>
 
       {/* User footer */}
-      <div style={{
-        borderTop: '1px solid rgba(255,255,255,.07)',
-        padding: collapsed ? '14px 0' : '14px 16px',
-      }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', padding: collapsed ? '14px 0' : '14px 16px' }}>
         {!collapsed && (
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>
-              {user?.name ?? 'Patrick Cordeiro'}
-            </div>
-            <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 11, marginTop: 2 }}>
-              Administrador(a) · Administrativo
+          <div style={{ marginBottom: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <Icon name="account_circle" size={32} color="rgba(255,255,255,.4)" />
+            <div>
+              <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{user?.name ?? 'Patrick Cordeiro'}</div>
+              <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 11, marginTop: 1 }}>Administrador · Administrativo</div>
             </div>
           </div>
         )}
@@ -172,9 +169,11 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
             width: '100%', padding: '8px 0', background: 'rgba(255,255,255,.06)',
             border: '1px solid rgba(255,255,255,.1)', borderRadius: 7,
             color: 'rgba(255,255,255,.6)', fontSize: 12, cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           }}
         >
-          {collapsed ? '↩' : '↩ Sair'}
+          <Icon name="logout" size={16} color="rgba(255,255,255,.6)" />
+          {!collapsed && 'Sair'}
         </button>
       </div>
     </aside>

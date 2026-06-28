@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from './Icon';
 
 const DNA_DARK = '#054664';
 const DNA_TEAL = '#18B8D0';
@@ -25,7 +26,7 @@ const PageHeader: React.FC<Props> = ({ title, subtitle = 'DNA - SESC Sede', peri
           fontSize: 11, background: `${DNA_TEAL}15`, color: DNA_TEAL,
           borderRadius: 20, padding: '2px 10px', fontWeight: 500,
         }}>
-          📅 {period}
+          <Icon name="calendar_today" size={13} style={{ marginRight: 4 }} />{period}
         </span>
       </div>
     </div>

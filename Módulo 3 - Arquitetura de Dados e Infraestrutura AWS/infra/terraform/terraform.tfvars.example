@@ -1,0 +1,13 @@
+environment                  = "dev"
+aws_region                   = "us-east-1"
+project_name                 = "dna-automacao"
+vpc_cidr                     = "10.0.0.0/16"
+availability_zones           = ["us-east-1a", "us-east-1b", "us-east-1c"]
+rds_instance_class           = "db.t3.medium"
+rds_allocated_storage_gb     = 100
+rds_max_allocated_storage_gb = 1000
+rds_db_name                  = "dna_automacao"
+rds_username                 = "dna_admin"
+hot_data_days                = 90
+cold_data_years              = 7
+glue_job_schedule            = "cron(0 2 * * ? *)"

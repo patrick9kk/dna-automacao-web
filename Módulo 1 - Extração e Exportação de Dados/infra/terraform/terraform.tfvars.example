@@ -1,0 +1,7 @@
+environment          = "dev"
+aws_region           = "us-east-1"
+project_name         = "dna-automacao"
+ses_sender_email     = "noreply@dnafacilities.com.br"
+report_retention_days = 7
+lambda_timeout        = 300
+lambda_memory_mb      = 512

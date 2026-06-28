@@ -1,0 +1,9 @@
+environment              = "dev"
+aws_region               = "us-east-1"
+project_name             = "dna-automacao"
+saml_metadata_url        = "https://login.microsoftonline.com/<tenant>/federationmetadata/2007-06/federationmetadata.xml"
+cognito_domain_prefix    = "dna-automacao"
+audit_log_retention_days = 365
+audit_s3_retention_years = 5
+waf_rate_limit           = 2000
+allowed_ip_cidrs         = ["10.0.0.0/8", "192.168.0.0/16"]

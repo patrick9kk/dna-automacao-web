@@ -1,0 +1,41 @@
+# Node
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+
+# Build
+frontend/dist/
+frontend/.vite/
+
+# OS
+.DS_Store
+desktop.ini
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+.terraform.lock.hcl
+
+# Logs
+*.log
+npm-debug.log*
+
+# AWS
+.aws-sam/
+samconfig.toml

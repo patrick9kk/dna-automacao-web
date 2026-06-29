@@ -1,157 +1,116 @@
 import React, { useState } from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Legend,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import PageHeader from '../Layout/PageHeader';
-import Icon from '../Layout/Icon';
-
-const DNA_DARK = '#054664';
-const DNA_TEAL = '#18B8D0';
+import { T } from '../../theme';
+import { KpiCard, SectionCard, SectionHead, PeriodBtn, Badge, SearchInput } from '../shared';
 
 const HISTORICO = [
-  { data: '06/05', consumo: 48000 },
-  { data: '07/05', consumo: 52000 },
-  { data: '08/05', consumo: 41000 },
-  { data: '09/05', consumo: 55000 },
-  { data: '10/05', consumo: 38000 },
-  { data: '11/05', consumo: 60000 },
-  { data: '12/05', consumo: 47000 },
-  { data: '13/05', consumo: 14601 },
-  { data: '14/05', consumo: 52000 },
-  { data: '15/05', consumo: 44000 },
-  { data: '16/05', consumo: 39000 },
-  { data: '17/05', consumo: 51000 },
-  { data: '18/05', consumo: 43000 },
-  { data: '19/05', consumo: 48000 },
+  { data: '06/05', consumo: 48000 },{ data: '07/05', consumo: 52000 },
+  { data: '08/05', consumo: 41000 },{ data: '09/05', consumo: 55000 },
+  { data: '10/05', consumo: 38000 },{ data: '11/05', consumo: 60000 },
+  { data: '12/05', consumo: 47000 },{ data: '13/05', consumo: 14601 },
+  { data: '14/05', consumo: 52000 },{ data: '15/05', consumo: 44000 },
+  { data: '16/05', consumo: 39000 },{ data: '17/05', consumo: 51000 },
+  { data: '18/05', consumo: 43000 },{ data: '19/05', consumo: 48000 },
 ];
 
 const MEDIDORES = [
-  { nome: 'Medidor Água Geral', id: 'WATER-A012-SESC-SEDE', area: 'DNA - SESC Sede', pico: '14,601 m³', media: '18,948 m³', situacao: 'Regular', status: 'Online' },
+  { nome: 'Medidor Água Geral', id: 'WATER-A012-SESC-SEDE', area: 'DNA - SESC Sede', pico: '14,601 m³', media: '18,948 m³', situacao: 'Regular', status: true },
 ];
 
-const Badge: React.FC<{ label: string; ok?: boolean }> = ({ label, ok = true }) => (
-  <span style={{
-    background: ok ? '#dcfce7' : '#fee2e2',
-    color: ok ? '#166534' : '#991b1b',
-    borderRadius: 12, padding: '2px 10px', fontSize: 12, fontWeight: 600,
-  }}>{label}</span>
-);
-
-const KpiCard: React.FC<{ label: string; value: string; sub?: string; icon?: string; color?: string }> = ({
-  label, value, sub, icon = 'water_drop', color = DNA_DARK,
-}) => (
-  <div style={{
-    background: '#fff', borderRadius: 10, padding: '18px 20px',
-    boxShadow: '0 1px 4px rgba(0,0,0,.08)', borderTop: `3px solid ${color}`,
-  }}>
-    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-      <div style={{ fontSize: 12, color: '#6b7280', textTransform: 'uppercase', letterSpacing: .4, fontWeight: 500 }}>{label}</div>
-      <Icon name={icon} size={22} color={color} />
+const CT = ({ active, payload, label }: any) => {
+  if (!active || !payload?.length) return null;
+  return (
+    <div style={{ background: '#fff', border: `1px solid ${T.border}`, borderRadius: 10, padding: '10px 14px', boxShadow: T.shadowMd }}>
+      <div style={{ fontSize: 11, color: T.txtMuted, marginBottom: 4 }}>{label}</div>
+      <div style={{ fontSize: 16, fontWeight: 800, color: '#3B82F6' }}>{payload[0].value.toLocaleString('pt-BR')} L</div>
     </div>
-    <div style={{ fontSize: 26, fontWeight: 700, color, marginTop: 8 }}>{value}</div>
-    {sub && <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>{sub}</div>}
-  </div>
-);
+  );
+};
 
 const Agua: React.FC = () => {
   const [periodo, setPeriodo] = useState('dia');
+  const [search, setSearch] = useState('');
+  const max = Math.max(...HISTORICO.map(d => d.consumo));
 
   return (
-    <div style={{ background: '#f3f4f6', minHeight: '100vh' }}>
-      <PageHeader title="Água" />
+    <div style={{ background: T.bgBase, minHeight: '100vh' }}>
+      <PageHeader title="Água" icon="water_drop" />
+      <div style={{ padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 24 }}>
 
-      <div style={{ padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-
-        {/* KPIs */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16 }}>
-          <KpiCard label="Consumo Total" value="587,380 m³" icon="water_drop" color={DNA_DARK} />
-          <KpiCard label="Maior Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="trending_up" color="#3b82f6" />
-          <KpiCard label="Menor Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="trending_down" color={DNA_TEAL} />
-          <KpiCard label="Pico de Consumo" value="14,601 m³" sub="13/05/2026 · 09:57:05" icon="arrow_upward" color="#ef4444" />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 16 }}>
+          <KpiCard label="Consumo Total" value="587,380 m³" icon="water_drop" gradient={`linear-gradient(135deg, ${T.primary}, #0A6E9C)`} />
+          <KpiCard label="Maior Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="trending_up" gradient="linear-gradient(135deg, #3B82F6, #60A5FA)" />
+          <KpiCard label="Menor Consumo" value="587,380 m³" sub="Medidor Água Geral" icon="trending_down" gradient={`linear-gradient(135deg, ${T.accent}, #0EA5C8)`} />
+          <KpiCard label="Pico de Consumo" value="14,601 m³" sub="13/05/2026 · 09:57:05" icon="arrow_upward" gradient="linear-gradient(135deg, #EF4444, #F87171)" />
         </div>
 
-        {/* Consumo por local */}
-        <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', overflow: 'hidden' }}>
-          <div style={{ padding: '16px 20px', borderBottom: '1px solid #f3f4f6', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="water_drop" size={20} color={DNA_TEAL} /> Consumo por Local</span></h3>
-            <input placeholder="Pesquisar Medidores" style={{ padding: '6px 12px', borderRadius: 20, border: '1px solid #d1d5db', fontSize: 12, outline: 'none' }} />
-          </div>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-            <thead>
-              <tr style={{ background: '#f9fafb' }}>
-                {['Medidor', 'ID', 'Área', 'Pico de Consumo', 'Média de Consumo', 'Situação', 'Status'].map(h => (
-                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', color: '#6b7280', fontWeight: 600, fontSize: 12, textTransform: 'uppercase', letterSpacing: .3 }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {MEDIDORES.map((row, i) => (
-                <tr key={i} style={{ borderTop: '1px solid #f3f4f6' }}>
-                  <td style={{ padding: '12px 16px', fontWeight: 600, color: DNA_DARK }}>{row.nome}</td>
-                  <td style={{ padding: '12px 16px', fontFamily: 'monospace', fontSize: 11, color: '#6b7280' }}>{row.id}</td>
-                  <td style={{ padding: '12px 16px', color: '#374151' }}>{row.area}</td>
-                  <td style={{ padding: '12px 16px', fontWeight: 600, color: '#ef4444' }}>{row.pico}</td>
-                  <td style={{ padding: '12px 16px' }}>{row.media}</td>
-                  <td style={{ padding: '12px 16px' }}><Badge label={row.situacao} ok /></td>
-                  <td style={{ padding: '12px 16px' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12 }}>
-                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
-                      {row.status}
-                    </span>
-                  </td>
+        <SectionCard>
+          <SectionHead icon="water_drop" title="Consumo por Local"
+            right={<SearchInput value={search} onChange={setSearch} placeholder="Pesquisar medidor…" />} />
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 680 }}>
+              <thead>
+                <tr>
+                  {['Medidor','ID','Área','Pico de Consumo','Média de Consumo','Situação','Status'].map(h => (
+                    <th key={h} style={{ padding: '10px 20px', textAlign: 'left', fontSize: 11, fontWeight: 700, color: T.txtMuted, textTransform: 'uppercase', letterSpacing: .6, background: '#F8FAFC', borderBottom: `1px solid ${T.border}` }}>{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {MEDIDORES.filter(m => m.nome.toLowerCase().includes(search.toLowerCase())).map((row, i) => (
+                  <tr key={i} style={{ borderBottom: `1px solid ${T.border}` }}>
+                    <td style={{ padding: '13px 20px', fontSize: 13, fontWeight: 600, color: T.txtPrimary }}>{row.nome}</td>
+                    <td style={{ padding: '13px 20px', fontSize: 11, fontFamily: 'monospace', color: T.txtMuted }}>{row.id}</td>
+                    <td style={{ padding: '13px 20px', fontSize: 13, color: T.txtSecondary }}>{row.area}</td>
+                    <td style={{ padding: '13px 20px', fontSize: 13, fontWeight: 700, color: '#EF4444' }}>{row.pico}</td>
+                    <td style={{ padding: '13px 20px', fontSize: 13, color: T.txtSecondary }}>{row.media}</td>
+                    <td style={{ padding: '13px 20px' }}><Badge label={row.situacao} ok /></td>
+                    <td style={{ padding: '13px 20px' }}>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: row.status ? T.success : T.danger }}>
+                        <span style={{ width: 7, height: 7, borderRadius: '50%', background: row.status ? T.success : T.danger, boxShadow: row.status ? `0 0 0 3px ${T.successLt}` : undefined }} />
+                        {row.status ? 'Online' : 'Offline'}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </SectionCard>
 
-        {/* Histórico */}
-        <div style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 4px rgba(0,0,0,.08)', padding: '20px 24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
-            <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: DNA_DARK }}><span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Icon name="bar_chart" size={20} color={DNA_TEAL} /> Histórico de Água</span></h3>
-            <div style={{ display: 'flex', gap: 6 }}>
-              {['hora', 'dia', 'mês'].map(p => (
-                <button key={p} onClick={() => setPeriodo(p)} style={{
-                  padding: '5px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                  background: periodo === p ? DNA_DARK : '#f3f4f6',
-                  color: periodo === p ? '#fff' : '#6b7280',
-                  border: `1px solid ${periodo === p ? DNA_DARK : '#e5e7eb'}`,
-                }}>
-                  Por {p}
-                </button>
+        <SectionCard>
+          <SectionHead icon="bar_chart" title="Histórico de Água"
+            right={<div style={{ display: 'flex', gap: 6 }}>{['hora','dia','mês'].map(p => <PeriodBtn key={p} active={periodo===p} label={`Por ${p}`} onClick={() => setPeriodo(p)} />)}</div>} />
+          <div style={{ padding: '16px 22px 12px' }}>
+            <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+              {[['Área','Geral'],['Sensor','Medidor Água Geral']].map(([lbl, opt]) => (
+                <div key={lbl} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                  <span style={{ fontSize: 12, color: T.txtMuted }}>{lbl}:</span>
+                  <select style={{ padding: '6px 12px', borderRadius: T.rPill, border: `1.5px solid ${T.border}`, fontSize: 12, color: T.txtPrimary, background: '#F8FAFC', outline: 'none' }}>
+                    <option>{opt}</option>
+                  </select>
+                </div>
               ))}
             </div>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={HISTORICO} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="4 4" stroke={T.border} vertical={false} />
+                <XAxis dataKey="data" tick={{ fontSize: 11, fill: T.txtMuted }} axisLine={false} tickLine={false} />
+                <YAxis tickFormatter={v => `${(v/1000).toFixed(0)}k`} tick={{ fontSize: 11, fill: T.txtMuted }} axisLine={false} tickLine={false} />
+                <Tooltip content={<CT />} cursor={{ fill: `${T.accent}10` }} />
+                <Bar dataKey="consumo" radius={[6,6,0,0]}>
+                  {HISTORICO.map((entry, i) => (
+                    <Cell key={i} fill={entry.consumo === max ? T.primary : T.accent} fillOpacity={entry.consumo === max ? 1 : 0.7} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
-          <div style={{ display: 'flex', gap: 12, marginBottom: 16, flexWrap: 'wrap', alignItems: 'center' }}>
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span style={{ fontSize: 12, color: '#6b7280' }}>Local:</span>
-              <select style={{ padding: '5px 10px', borderRadius: 6, border: '1px solid #d1d5db', fontSize: 12 }}>
-                <option>Geral</option>
-              </select>
-            </div>
-            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-              <span style={{ fontSize: 12, color: '#6b7280' }}>Sensor:</span>
-              <select style={{ padding: '5px 10px', borderRadius: 6, border: '1px solid #d1d5db', fontSize: 12 }}>
-                <option>Medidor Água Geral</option>
-              </select>
-            </div>
-          </div>
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={HISTORICO}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="data" tick={{ fontSize: 11 }} />
-              <YAxis tickFormatter={v => `${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 11 }} />
-              <Tooltip formatter={(v: number) => [`${v.toLocaleString('pt-BR')} L`, 'Consumo']} />
-              <Legend />
-              <Bar dataKey="consumo" name="Consumo (L)" fill={DNA_TEAL} radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+        </SectionCard>
 
       </div>
     </div>
   );
 };
-
 export default Agua;

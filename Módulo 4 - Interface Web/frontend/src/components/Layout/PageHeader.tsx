@@ -1,36 +1,67 @@
 import React from 'react';
+import { T } from '../../theme';
 import Icon from './Icon';
-
-const DNA_DARK = '#054664';
-const DNA_TEAL = '#18B8D0';
 
 interface Props {
   title: string;
   subtitle?: string;
   period?: string;
+  icon?: string;
   children?: React.ReactNode;
 }
 
-const PageHeader: React.FC<Props> = ({ title, subtitle = 'DNA - SESC Sede', period = '01 mai. 26 ↔ 31 mai. 26', children }) => (
+const PageHeader: React.FC<Props> = ({
+  title,
+  subtitle = 'DNA — SESC Sede',
+  period = '01 mai. 26 ↔ 31 mai. 26',
+  icon,
+  children,
+}) => (
   <div style={{
-    background: '#fff', borderBottom: '1px solid #e5e7eb',
-    padding: '14px 28px', display: 'flex', alignItems: 'center',
-    justifyContent: 'space-between', flexWrap: 'wrap', gap: 12,
-    position: 'sticky', top: 0, zIndex: 50,
+    background: T.bgCard,
+    borderBottom: `1px solid ${T.border}`,
+    padding: '16px 32px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 12,
+    position: 'sticky',
+    top: 0,
+    zIndex: 50,
+    boxShadow: '0 1px 0 rgba(0,0,0,.04)',
   }}>
-    <div>
-      <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: DNA_DARK }}>{title}</h1>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 3 }}>
-        <span style={{ fontSize: 12, color: '#6b7280' }}>{subtitle}</span>
-        <span style={{
-          fontSize: 11, background: `${DNA_TEAL}15`, color: DNA_TEAL,
-          borderRadius: 20, padding: '2px 10px', fontWeight: 500,
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+      {icon && (
+        <div style={{
+          width: 42, height: 42, borderRadius: 11,
+          background: `linear-gradient(135deg, ${T.primary}, #0A6E9C)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0,
         }}>
-          <Icon name="calendar_today" size={13} style={{ marginRight: 4 }} />{period}
-        </span>
+          <Icon name={icon} size={22} color="#fff" />
+        </div>
+      )}
+      <div>
+        <h1 style={{ margin: 0, fontSize: 19, fontWeight: 800, color: T.txtPrimary, letterSpacing: -.3 }}>
+          {title}
+        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 2 }}>
+          <span style={{ fontSize: 12, color: T.txtMuted }}>{subtitle}</span>
+          <span style={{ color: T.border }}>·</span>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            fontSize: 11, fontWeight: 600,
+            background: T.accentLt, color: T.accent,
+            borderRadius: T.rPill, padding: '2px 10px',
+          }}>
+            <Icon name="calendar_today" size={11} />
+            {period}
+          </span>
+        </div>
       </div>
     </div>
-    {children && <div style={{ display: 'flex', gap: 8 }}>{children}</div>}
+    {children && <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>{children}</div>}
   </div>
 );
 

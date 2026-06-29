@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { T } from '../../theme';
 import Icon from './Icon';
-
-const DNA_DARK = '#054664';
-const DNA_TEAL = '#18B8D0';
 
 interface MenuItem {
   label: string;
@@ -41,65 +39,93 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [openGroup, setOpenGroup] = useState<string | null>('Infra Predial');
+  const [hoverItem, setHoverItem] = useState<string | null>(null);
 
   const handleLogout = async () => { await logout(); navigate('/login'); };
 
-  const linkBase: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', gap: 10,
-    padding: collapsed ? '11px 0' : '11px 16px',
-    justifyContent: collapsed ? 'center' : 'flex-start',
-    color: 'rgba(255,255,255,.75)', textDecoration: 'none',
-    borderRadius: 8, fontSize: 13.5, fontWeight: 500,
-    transition: 'background .15s, color .15s', cursor: 'pointer',
-    margin: '1px 8px',
-  };
-
   return (
     <aside style={{
-      width: collapsed ? 60 : 220, minHeight: '100vh',
-      background: '#061f30', display: 'flex', flexDirection: 'column',
-      transition: 'width .25s', flexShrink: 0,
-      borderRight: '1px solid rgba(255,255,255,.07)',
+      width: collapsed ? 64 : 230,
+      minHeight: '100vh',
+      background: T.bgSide,
+      display: 'flex',
+      flexDirection: 'column',
+      transition: 'width .22s cubic-bezier(.4,0,.2,1)',
+      flexShrink: 0,
+      position: 'relative',
+      borderRight: '1px solid rgba(255,255,255,.05)',
     }}>
-      {/* Logo + toggle */}
+      {/* Logo area */}
       <div style={{
-        padding: collapsed ? '18px 0' : '18px 16px',
-        display: 'flex', alignItems: 'center',
+        padding: collapsed ? '20px 0' : '20px 18px',
+        display: 'flex',
+        alignItems: 'center',
         justifyContent: collapsed ? 'center' : 'space-between',
-        borderBottom: '1px solid rgba(255,255,255,.07)',
-        minHeight: 65,
+        borderBottom: '1px solid rgba(255,255,255,.06)',
+        minHeight: 68,
       }}>
         {!collapsed && (
-          <img src="/logo-dna-branco.svg" alt="DNA" style={{ height: 30 }} />
+          <img src="/logo-dna-branco.svg" alt="DNA" style={{ height: 28, flexShrink: 0 }} />
         )}
-        <button onClick={onToggle} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          color: 'rgba(255,255,255,.5)', padding: 4, display: 'flex', alignItems: 'center',
-        }}>
-          <Icon name={collapsed ? 'chevron_right' : 'chevron_left'} size={22} color="rgba(255,255,255,.5)" />
+        <button
+          onClick={onToggle}
+          style={{
+            width: 28, height: 28, borderRadius: 7,
+            background: 'rgba(255,255,255,.07)',
+            border: 'none', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            transition: T.transition,
+          }}
+        >
+          <Icon name={collapsed ? 'chevron_right' : 'chevron_left'} size={18} color="rgba(255,255,255,.5)" />
         </button>
       </div>
 
-      {/* Navigation */}
-      <nav style={{ flex: 1, paddingTop: 8, overflowY: 'auto' }}>
+      {/* Nav */}
+      <nav style={{ flex: 1, paddingTop: 10, paddingBottom: 10, overflowY: 'auto', overflowX: 'hidden' }}>
+        {!collapsed && (
+          <div style={{ padding: '8px 18px 4px', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,.25)', letterSpacing: 1.2, textTransform: 'uppercase' }}>
+            Menu
+          </div>
+        )}
+
         {MENU.map(item => {
           const hasChildren = !!item.children;
           const isOpen = openGroup === item.label;
+          const isHov = hoverItem === item.label;
+
+          const linkStyle = (isActive: boolean): React.CSSProperties => ({
+            display: 'flex', alignItems: 'center',
+            gap: 10,
+            padding: collapsed ? '10px 0' : '10px 14px',
+            justifyContent: collapsed ? 'center' : 'flex-start',
+            margin: '2px 8px',
+            borderRadius: 9,
+            textDecoration: 'none',
+            fontSize: 13.5,
+            fontWeight: isActive ? 600 : 400,
+            transition: T.transition,
+            cursor: 'pointer',
+            background: isActive
+              ? `linear-gradient(90deg, ${T.accent}22, ${T.accent}11)`
+              : isHov ? 'rgba(255,255,255,.06)' : 'transparent',
+            color: isActive ? T.accent : 'rgba(255,255,255,.72)',
+            borderLeft: isActive ? `2px solid ${T.accent}` : '2px solid transparent',
+            userSelect: 'none' as const,
+          });
 
           if (!hasChildren) {
             return (
               <NavLink
                 key={item.label}
                 to={item.path!}
-                style={({ isActive }) => ({
-                  ...linkBase,
-                  background: isActive ? `${DNA_TEAL}22` : 'transparent',
-                  color: isActive ? DNA_TEAL : 'rgba(255,255,255,.75)',
-                  borderLeft: isActive ? `3px solid ${DNA_TEAL}` : '3px solid transparent',
-                })}
+                title={collapsed ? item.label : undefined}
+                style={({ isActive }) => linkStyle(isActive)}
+                onMouseEnter={() => setHoverItem(item.label)}
+                onMouseLeave={() => setHoverItem(null)}
               >
-                <Icon name={item.icon} size={20} style={{ flexShrink: 0 }} />
-                {!collapsed && <span>{item.label}</span>}
+                <Icon name={item.icon} size={19} style={{ flexShrink: 0 }} />
+                {!collapsed && <span style={{ whiteSpace: 'nowrap', overflow: 'hidden' }}>{item.label}</span>}
               </NavLink>
             );
           }
@@ -108,39 +134,44 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
             <div key={item.label}>
               <div
                 onClick={() => setOpenGroup(isOpen ? null : item.label)}
-                style={{ ...linkBase, justifyContent: collapsed ? 'center' : 'space-between', userSelect: 'none' }}
+                onMouseEnter={() => setHoverItem(item.label)}
+                onMouseLeave={() => setHoverItem(null)}
+                style={{
+                  ...linkStyle(false),
+                  justifyContent: collapsed ? 'center' : 'space-between',
+                }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <Icon name={item.icon} size={20} style={{ flexShrink: 0 }} />
-                  {!collapsed && <span>{item.label}</span>}
+                  <Icon name={item.icon} size={19} style={{ flexShrink: 0 }} />
+                  {!collapsed && <span style={{ whiteSpace: 'nowrap' }}>{item.label}</span>}
                 </div>
                 {!collapsed && (
                   <Icon
-                    name="chevron_right"
-                    size={16}
-                    color="rgba(255,255,255,.4)"
-                    style={{ transition: 'transform .2s', transform: isOpen ? 'rotate(90deg)' : 'none' }}
+                    name="chevron_right" size={15}
+                    color="rgba(255,255,255,.35)"
+                    style={{ transition: 'transform .2s', transform: isOpen ? 'rotate(90deg)' : 'none', flexShrink: 0 }}
                   />
                 )}
               </div>
 
               {isOpen && !collapsed && (
-                <div style={{ paddingLeft: 16 }}>
+                <div style={{ paddingLeft: 10, marginBottom: 2 }}>
                   {item.children!.map(child => (
                     <NavLink
                       key={child.path}
                       to={child.path}
                       style={({ isActive }) => ({
-                        ...linkBase,
-                        margin: '1px 4px',
-                        padding: '9px 14px',
-                        background: isActive ? `${DNA_TEAL}22` : 'transparent',
-                        color: isActive ? DNA_TEAL : 'rgba(255,255,255,.6)',
-                        borderLeft: isActive ? `3px solid ${DNA_TEAL}` : '3px solid transparent',
+                        ...linkStyle(isActive),
+                        margin: '1px 8px 1px 14px',
+                        padding: '8px 12px',
                         fontSize: 13,
+                        fontWeight: isActive ? 600 : 400,
                       })}
                     >
-                      <Icon name="fiber_manual_record" size={8} style={{ flexShrink: 0 }} />
+                      <span style={{
+                        width: 5, height: 5, borderRadius: '50%', flexShrink: 0,
+                        background: 'rgba(255,255,255,.3)',
+                      }} />
                       {child.label}
                     </NavLink>
                   ))}
@@ -152,13 +183,21 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
       </nav>
 
       {/* User footer */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,.07)', padding: collapsed ? '14px 0' : '14px 16px' }}>
+      <div style={{ borderTop: '1px solid rgba(255,255,255,.06)', padding: collapsed ? '14px 0' : '14px 12px' }}>
         {!collapsed && (
-          <div style={{ marginBottom: 10, display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Icon name="account_circle" size={32} color="rgba(255,255,255,.4)" />
-            <div>
-              <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>{user?.name ?? 'Patrick Cordeiro'}</div>
-              <div style={{ color: 'rgba(255,255,255,.45)', fontSize: 11, marginTop: 1 }}>Administrador · Administrativo</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+              background: `linear-gradient(135deg, ${T.accent}60, ${T.primary})`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <Icon name="person" size={18} color="#fff" />
+            </div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ color: '#fff', fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {user?.name ?? 'Patrick Cordeiro'}
+              </div>
+              <div style={{ color: 'rgba(255,255,255,.4)', fontSize: 11 }}>Administrador</div>
             </div>
           </div>
         )}
@@ -166,13 +205,16 @@ const Sidebar: React.FC<Props> = ({ collapsed, onToggle }) => {
           onClick={handleLogout}
           title="Sair"
           style={{
-            width: '100%', padding: '8px 0', background: 'rgba(255,255,255,.06)',
-            border: '1px solid rgba(255,255,255,.1)', borderRadius: 7,
-            color: 'rgba(255,255,255,.6)', fontSize: 12, cursor: 'pointer',
+            width: '100%', padding: '8px 0',
+            background: 'rgba(255,255,255,.05)',
+            border: '1px solid rgba(255,255,255,.08)',
+            borderRadius: 8,
+            color: 'rgba(255,255,255,.55)', fontSize: 12, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            transition: T.transition,
           }}
         >
-          <Icon name="logout" size={16} color="rgba(255,255,255,.6)" />
+          <Icon name="logout" size={16} color="rgba(255,255,255,.55)" />
           {!collapsed && 'Sair'}
         </button>
       </div>

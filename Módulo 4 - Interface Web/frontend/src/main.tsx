@@ -2,18 +2,12 @@ import './index.css';
 import React    from 'react';
 import ReactDOM from 'react-dom/client';
 import App      from './App';
-
-// Global reset
-const style = document.createElement('style');
-style.textContent = `
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f3f4f6; }
-  code { font-family: 'Courier New', monospace; }
-`;
-document.head.appendChild(style);
+import { AuthProvider } from './contexts/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
